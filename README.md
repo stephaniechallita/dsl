@@ -1,6 +1,6 @@
 # Labs on Domain-Specific Languages (DSL)
 
-The labs will consist in realizing by group of 2 the following tutorial. The evaluation will consist in a final demonstration on Thursday, Feb. 4th, 16h-18h.
+The labs will consist in realizing individually the following tutorial. The evaluation will consist in progressively demonstrating the three parts of the tutorial.
 
 ## Overall objectives of the labs
 
@@ -61,7 +61,9 @@ fsm door
     transition b2 closed -> broken [warning]
 ~~~~
 
-## Part 3 - Compilation: definition of the Xtend-based compiler for your language
+## Part 3 - Executable modeling
+
+### Compilation: definition of the Xtend-based compiler for your language
 
 Up to now, you identified the concepts of your language (which set its expressivity) and you implemented a textual editor to support the edition of conforming models (_aka._ programs). The next step is the ability of executing such models. For this purpose, there are two possibilities: by compilation (_aka._ code generation) to an executable implementation, or by interpretation (_aka._ virtual machine). 
 
@@ -69,6 +71,6 @@ In this part of the tutorial, we ask you to complement your metamodel with the i
 
 Votre compilateur peut avoir comme point d'entrée [la méthode _doGenerate_](https://www.eclipse.org/Xtext/documentation/103_domainmodelnextsteps.html) de la classe _fr.ice.fsm.generator.FsmGenerator_ pour être appelé à chaque sauvegarde d'un modèle édité avec l'éditeur textuel développé avec Xtext dans la partie précédente.  
 
-## Part 4 (optional) - Interpretation: definition of the Xtend-based interpreter for your language
+### Interpretation: definition of the Xtend-based interpreter for your language
 
 In this part, we ask you to develop a new visitor that will interpret a given conforming model instead of generating an implementation in a third party language (i.e. Java in the case of the compiler developped in the previous part). Similarly to a compiler, an interpreter goes through the asbtract syntax tree of a given model. Instead of generating the corresponding code, it interprets the model element in terms of changes in a model state (aka., _context_). This is captured in an additional design pattern called [interpreter](https://en.wikipedia.org/wiki/Interpreter_pattern) that can be used to complement the design pattern [visitor](https://refactoring.guru/design-patterns/visitor).
