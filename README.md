@@ -1,76 +1,103 @@
 # Labs on Domain-Specific Languages (DSL)
 
-The labs will consist in realizing individually the following tutorial. The evaluation will consist in progressively demonstrating the three parts of the tutorial.
+The lab sessions for this course will consist in realizing the following steps. After each major step, you will need to showcase your work through a small demonstration, which will be used to determine your grade.
 
-## Overall objectives of the labs
+## Overall objectives of the lab
 
-The main objective of this tutorial is to build your own state-machine language (aka. FSM, standing for _Finite State Machine_), including the design of the domain (i.e. concepts and relationships between them), and the developement of the associated tooling: a textual editor, a compiler (to Java code), and an interpreter. 
+These lab sessions will have you realize your very own version of RoboML, a language to help pilot a small four-wheeled robot. Building the DSL will include designing the domain (*i.e.* the concepts and their relationships) as well as associated tooling: this tooling includes the text editor and its services, but also interpretation (through a web-based simulator) and compilation (to Arduino code that will run on the robot itself).
 
-With FSM, we expect to be able to model a state machine according to the textual syntax proposed in the following example, through a modern editor (e.g., syntax highlighting, autocompletion, validation rules and quick fixes, code folding...): 
-	
-~~~~
-fsm door
-    state opened entry "open door" 
-    state init closed entry "close door"
-    transition open closed -> opened [on]
-    transition close opened -> closed [off]
-~~~~
+Below, you can find an example of a program that we expect to write in your language.
 
-A model (e.g., _door_) conforming to your language (aka., _FSM_), can then be executed, either through a compilation (i.e. code generation) to a Java-based implementation, or through a direct interpretation (i.e., virtual machine). 
+```
+grammar exemple
+```
 
-For the execution, input events (e.g., _on_ and _off_) that drive the execution can be injected through the console by the user. 
+The above program, when executed, should (comportement du programme)
 
-> The proposed _FSM_ language to be designed and implemented is a simple automata. Automata are a core paradigm for MANY domain-specific languages used in practice, either for high level design (e.g., functional chains in systems engineering), analysis (e.g., termination, composability, etc.), or development (e.g., agent based simulations, reactive programming, etc.). 
+## Part 1 - Domain modeling: definition of the language's domain model with Ecore
 
-## Part 1 - Domain modeling: definition of the Ecore metamodel for your language
+The first step in defining a language is to model the concepts and their relationships in the domain targeted by your language. For this part, you can pick any tool you want: the Ecore framework, an online UML editor, or even simply a pen and a piece of paper!
 
-The main objective of this part is to capture in an Ecore metamodel the concepts and relationships between them of the domain addressed by your language (i.e. the domain of state machine). You are expected to identify the required concepts to model the aforementionned example, and to reify them into language constructs, in the form of a metamodel defined with the metalanguage Ecore and the associated tooling (e.g., graphical editor), aka. Ecore tools. 
+If you chose Ecore, there are some instructions below to help with the technical aspect.
 
-Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., the GEMOC Studio), create an _Ecore Modeling Project_. Give a proper name to your project (e.g., _fr.ice.fsm.model_) and your package (e.g., _fsm_).
+### Ecore modeling
 
-From this point, you can start model your domain in the form of an object-oriented metamodel consisting of classes and relationships between them. 
+Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., the GEMOC Studio), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
 
 You may validate your metamodel by right click on your ecore model and _Validate_.
 
 When this is done, you can generate the Java-based implementation of your domain model by opening the associated genmodel file, right click on the root element and _Generate all_
 
-You may assess the expressivity of your metamodel (i.e., check if it well captures your domain, in your case meaning it supports the modeling of the proposed example) by opening the ecore metamodel, right clic on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure. 
+You may assess the expressivity of your metamodel (*i.e.*, check if it well captures your domain, in your case meaning it supports the modeling of the proposed example) by opening the ecore metamodel, right clic on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure. 
 
-## Part 2 - Textual modeling: definition of the Xtext editor for your language
+## Part 2 - Textual modeling: definition of the Langium grammar and editor for your language
 
-The next step consists into going further than the tree-based editor by developing a modern textual editor. You will use Xtext for this purpose.
+After determining the domain, it is time to move on to the actual text editor for your language. In this lab, we will be building this editor using the TypeScript-based [Langium](https://langium.org/) benchwork to build a Visual Studio Code extension supporting edition of your language.
 
-Create a new _Xtext Project From Existing Ecore Models_, select the genmodel file associated to your Ecore metamodel, and select the concept of the root element (i.e., the first model element that will be instantiated when you will create a new model). 
+If not done already, you will need to install a [node environment](https://nodejs.org/en/download) as well as Visual Studio Code, and then run the command `npm i -g yo generator-langium` to install the Langium project generator. Then, run `yo langium` to create the project. This will offer to create a few different things; you can say yes to all of them, pick a language name, extension name and a file extension (*e.g.* .rob).
 
-Take care of properly filling-in the wizard. Then Xtext provides you a first version of a grammar for the textual syntax of your language. 
+Depending on what modeling tool you picked in part 1, the next step can change a little bit. If you picked another method than Ecore, skip the following section.
 
-> You may need to add the Xtext nature to the project where is your Ecore metamodel to make sure the Xtext project can compile (right clic on the project, _configure_ and _add Xtext nature_). 
+### Ecore modeling
 
-You can immediatly start a new eclipse from the current one (_Run configuration..._ > _Eclipse Application_), create a new empty project and a blank file with the choosen extension. Eclipse will propose you to open it with the corresponding Xtext editor, and then you can use it according to the syntax proposed by the automatically generated grammar. 
+If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium: simply follow the instructions from the README from [this project](https://github.com/TypeFox/xtext2langium) (be careful, the plugin is not compatible with GEMOC Studio so you will need to use it with another type of Eclipse). You can thus write your grammar using Xtext rather than Langium if you so wish.
 
-Modify your grammar to make sure you can model a state machine according to the syntax proposed in the initial example. You may also have a try to the following example :)
+The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure to rename the main grammar file so that it is detected by Langium.
 
-~~~~
-fsm door
-    state opened entry "open door" 
-    state init closed entry "close door"
-    transition open closed -> opened [on]
-    transition close opened -> closed [off]
-    state broken entry "broken door"
-    transition b1 opened -> broken [warning]
-    transition b2 closed -> broken [warning]
-~~~~
+### Other types of modeling
+
+Since you have previously modeled your domain, we need to translate that modeling effort into a meta-model that can be understood by Langium. This can be done by inserting TypeScript-like interfaces in the grammar, the full specification of which can be seen [here](https://langium.org/docs/sematic-model/#declared-types). As an example, this could be the model used for a Finished State Machine language:
+
+```ts
+interface StateMachine {
+    name: string
+    states: State[]
+    transitions: Transition[]
+    initialState: State
+}
+
+interface State {
+    name: string
+    output: string
+}
+
+interface Transition {
+    name: string
+    input: string
+    start: @State
+    target: @State
+}
+```
+
+You can then write the textual grammar rules that will return your specified types.
+
+### VSCode extension with Langium
+
+Once you have a valid [Langium grammar](https://langium.org/docs/grammar-language/), you can launch the commands `npm run langium:generate` and `npm run build` to build the project.
+
+You can test your editor as you make changes either by launching the command `code --extensionDevelopmentPath=$PWD`, or by starting a debug session in VSCode, both of which will open a VSCode instance with your extension loaded in. You can create example and test files for your language in this instance. A goal for this part can be to have your language parse the examples given in this document, such as the following:
+
+```
+autre exemple grammaire
+```
 
 ## Part 3 - Executable modeling
 
-### Compilation: definition of the Xtend-based compiler for your language
+In the previous steps, you have first identified the core concepts of your language, and implemented a textual syntax to define instances of those concepts. The next step is to try and execute those model instances: this can be done either through interpretation or compilation. You will need to implement these as functions in the `generator.ts` file, which you should move to its own `src/generators/` folder.
 
-Up to now, you identified the concepts of your language (which set its expressivity) and you implemented a textual editor to support the edition of conforming models (_aka._ programs). The next step is the ability of executing such models. For this purpose, there are two possibilities: by compilation (_aka._ code generation) to an executable implementation, or by interpretation (_aka._ virtual machine). 
+### Interpretation: 
 
-In this part of the tutorial, we ask you to complement your metamodel with the implementation of an Xtend-based compiler, following the design pattern [visitor](https://refactoring.guru/design-patterns/visitor). In the case of FSM, such a compiler must generate a Java-based implementation of a given model (i.e., a state machine) according to the design pattern [state](https://refactoring.guru/design-patterns/state). 
+In this lab, your interpreter will run on a web-based simulator for the robot written in JavaScript. By now, your programs should be parsable, which means Langium will be able to give you an [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) (AST) representing your programs. Interpretation is then just a matter of writing a set of visitor-like functions, which will walk through each node and process the changes to be displayed in the simulator.
 
-Votre compilateur peut avoir comme point d'entrée [la méthode _doGenerate_](https://www.eclipse.org/Xtext/documentation/103_domainmodelnextsteps.html) de la classe _fr.ice.fsm.generator.FsmGenerator_ pour être appelé à chaque sauvegarde d'un modèle édité avec l'éditeur textuel développé avec Xtext dans la partie précédente.  
+(détails techniques de où écrire les fonctions/comment les lier au simulateur)
 
-### Interpretation: definition of the Xtend-based interpreter for your language
 
-In this part, we ask you to develop a new visitor that will interpret a given conforming model instead of generating an implementation in a third party language (i.e. Java in the case of the compiler developped in the previous part). Similarly to a compiler, an interpreter goes through the asbtract syntax tree of a given model. Instead of generating the corresponding code, it interprets the model element in terms of changes in a model state (aka., _context_). This is captured in an additional design pattern called [interpreter](https://en.wikipedia.org/wiki/Interpreter_pattern) that can be used to complement the design pattern [visitor](https://refactoring.guru/design-patterns/visitor).
+### Compilation:
+
+Since the objective of this lab is to be able to program a small four-wheeled robot using your language, you will need to be able to compile your code to something the robot can understand - in this case, the robot uses an Arduino card, which can be programmed using a [subset of C](https://www.arduino.cc/reference/en/). You will need to write a compiler that generates Arduino code based on the defined model.
+
+In the same idea as an interpreter, a compiler can also be implemented with functions visiting every node - except instead of directly simulating behaviour, you will generate code that matches the node's semantics.
+
+As previously, you can put your functions in the generator folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli compile <source>` in your terminal and have it generate Arduino code corresponding to the source program given as argument.
+
+(détails de comment téléverser sur le robot)
