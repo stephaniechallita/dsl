@@ -73,13 +73,13 @@ If not done already, you will need to install a [node environment](https://nodej
 
 Depending on what modeling tool you picked in part 1, the next step can change a little bit. If you picked another method than Ecore, skip the following section.
 
-**N.B.** : There is flexibility on the concrete syntax of the language, but make it concise and usable for non-expert in programming. Ask your teacher during labs if you plan to change the syntax.
+**N.B.**: There is flexibility on the concrete syntax of the language, but make it concise and usable for non-expert in programming. Ask your teacher during labs if you plan to change the syntax.
 
 ### Ecore modeling
 
 If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium: simply follow the instructions from the README of [this project](https://github.com/TypeFox/xtext2langium). You can thus write your grammar using Xtext rather than Langium if you so wish.
 
-The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure the grammara names match up between your projects, otherwise you will have to manually refactor the conflicts.
+The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure the grammars names match up between your projects, otherwise you will have to manually refactor the conflicts.
 
 ### Other types of modeling
 
@@ -128,7 +128,7 @@ let void entry () {
 }
 ```
 
-**N.B.** : If you have made changes on the syntax, the equivalent AST with your syntax is your test.
+**N.B.**: If you have made changes on the syntax, the equivalent AST with your syntax is your test.
 
 ## Part 3 - Executable modeling
 
