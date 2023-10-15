@@ -1,10 +1,12 @@
 # Labs on Domain-Specific Languages (DSL)
 
-The lab sessions for this course will consist in realizing the following steps. After each major step, you will need to showcase your work through a small demonstration, which will be used to determine your grade.
+The lab sessions for this course will consist in realizing the following steps. After each major step, you will need to showcase your work to your lab teacher through a small demonstration, which will be used to grade you. You can only move onto the next step once the teacher has validated the current part.
+
+These lab sessions are to be realized in groups of two.
 
 ## Overall objectives of the lab
 
-During these lab sessions, you will create your own version of RoboML, a language to define the behavior of a four-wheeled robot. Building the DSL will include modeling the domain (*i.e.* the concepts and their relationships), and implements the associated tooling: *e.g.* the text editor and its services, an interpreter (through a web-based simulator) and a compiler (to Arduino code that will run on the robot itself).
+During these lab sessions, you will create your own version of RoboML, a language to define the behavior of a small robot. Building the DSL will include modeling the domain (*i.e.* the concepts and their relationships), and implements the associated tooling: *e.g.* the text editor and its services, an interpreter (through a web-based simulator) and a compiler (to Arduino code that will run on the robot itself).
 
 Below, you can find an example of a program that we expect to write in your language.
 
@@ -31,7 +33,9 @@ let void square(){
 }
 ```
 
-The above program, when executed, should set the speed of the robot and then perform 5 time (loop) a square pattern movement (square function)
+The above program, when executed, should set the speed of the robot and then perform 5 time (loop) a square pattern movement (square function).
+
+The robot used for this lab has four wheels with individual motors, and an ultrasound sensor which can be used to measure distance to an object in front. We expect your language to mostly follow the imperative programming paradigm, with basic arithmetics and commands for the robot.
 
 ## Part 1 - Domain modeling: definition of the language's metamodel with Ecore
 
@@ -41,7 +45,7 @@ For this part, you can pick any tool you want: the Ecore framework, an online UM
 
 If you chose Ecore, there are some instructions below to help with the technical aspect.
 
-There is a short list of mandatory concepts that we want :
+There is a short list of mandatory concepts that we want:
 - Movement (front, back, sides)
 - Rotation
 - Speed
@@ -53,19 +57,19 @@ There is a short list of mandatory concepts that we want :
 
 ### Ecore modeling
 
-Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., Eclipse DSL, the GEMOC Studio), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
+Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., [Eclipse DSL](https://www.eclipse.org/downloads/packages/release/2023-09/r/eclipse-ide-java-developers) with the added [Ecore tools](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
 
-You may validate your metamodel by right-click on your ecore model and _Validate_.
+You may validate your metamodel by right-clicking on your ecore model and then clicking on _Validate_.
 
-When this is done, you can generate the Java-based implementation of your domain model by opening the associated `genmodel` file, right-click on the root element and _Generate all_
+When this is done, you can generate the Java-based implementation of your domain model by opening the associated `genmodel` file, right-clicking on the root element and _Generate all_
 
-You may assess the expressivity of your metamodel (*i.e.*, check if it well captures your domain, in your case meaning it supports the modeling of the proposed example) by opening the ecore metamodel, right click on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure. 
+You may assess the expressivity of your metamodel (*i.e.*, check if it captures your domain well, in your case meaning it supports the modeling of the proposed example) by opening the Ecore metamodel, right-click on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure. 
 
 ## Part 2 - Textual modeling: definition of the Langium grammar and editor for your language
 
 After determining the domain, it is time to move on to the actual text editor for your language. In this lab, we will be building this editor using the TypeScript-based [Langium](https://langium.org/) workbench to build a Visual Studio Code extension supporting edition of your language.
 
-If not done already, you will need to install a [node environment](https://nodejs.org/en/download) as well as Visual Studio Code, and then run the command `npm i -g yo generator-langium` to install the Langium project generator. Then, run `yo langium` to create the project. This will offer to create a few different things; you **have to** say yes to all of them, pick a language name, extension name and a file extension (*e.g.* .rob).
+If not done already, you will need to install a [node environment](https://nodejs.org/en/download) as well as [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview), and then run the command `npm i -g yo generator-langium` to install the Langium project generator. Then, run `yo langium` to create the project. This will offer to create a few different things; you **have to** say yes to all of them, pick a language name, extension name and a file extension (*e.g.* .rob).
 
 Depending on what modeling tool you picked in part 1, the next step can change a little bit. If you picked another method than Ecore, skip the following section.
 
@@ -73,9 +77,9 @@ Depending on what modeling tool you picked in part 1, the next step can change a
 
 ### Ecore modeling
 
-If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium: simply follow the instructions from the README from [this project](https://github.com/TypeFox/xtext2langium) (be careful, the plugin is not compatible with GEMOC Studio so you will need to use it with another type of Eclipse). You can thus write your grammar using Xtext rather than Langium if you so wish.
+If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium: simply follow the instructions from the README of [this project](https://github.com/TypeFox/xtext2langium). You can thus write your grammar using Xtext rather than Langium if you so wish.
 
-The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure to rename the main grammar file so that it is detected by Langium.
+The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure the grammara names match up between your projects, otherwise you will have to manually refactor the conflicts.
 
 ### Other types of modeling
 
@@ -112,7 +116,7 @@ You can test your editor as you make changes either by launching the command `co
 
 ```
 let void entry () {
-    setSpeed(200 in mm) // distance per second (here 200mm/s)
+    setSpeed(200 mm) // distance per second (here 200mm/s)
     var number time = getTimestamp()
     loop time < 60000
     {
@@ -134,7 +138,7 @@ The next step is to try and execute those model instances: this can be done eith
 
 To execute the program, you will use the [visitor design pattern](https://en.wikipedia.org/wiki/Visitor_pattern) to implement a compiler targeting the Arduino language (allowing the execution on a real robot) and an interpreter directly executing the program.
 The visitor pattern allows to split the language definition in two parts, the syntax (abstract syntax defined through the metamodel and concrete syntax defined by the grammar) and the semantics (interpreter and compiler), easing the extension/evolution of the language semantics.
-Each method implemented in a visitor represent the semantics of a concept, often relying on the semantics of its child in the AST.
+Each method implemented in a visitor represents the semantics of a concept, often relying on the semantics of its child in the AST.
 
 ### Interpretation: 
 
