@@ -53,6 +53,11 @@ const typecheck = (async () => {
     }
 });
 
+const parseAndValidate = (async () => {
+    console.info('validating current code...');
+    // To implement
+});
+
 const execute = (async () => {
     console.info('running current code...');
     // To implement

@@ -55,6 +55,8 @@ There is a short list of mandatory concepts that we want:
 - Control structure (loop, conditions)
 - Functions and variables
 
+**N.B. :** For units, you can either implement it as "cast function" or as a concrete type in the language.
+
 ### Ecore modeling
 
 Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., [Eclipse DSL](https://www.eclipse.org/downloads/packages/release/2023-09/r/eclipse-ide-java-developers) with the added [Ecore tools](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
@@ -140,22 +142,44 @@ To execute the program, you will use the [visitor design pattern](https://en.wik
 The visitor pattern allows to split the language definition in two parts, the syntax (abstract syntax defined through the metamodel and concrete syntax defined by the grammar) and the semantics (interpreter and compiler), easing the extension/evolution of the language semantics.
 Each method implemented in a visitor represents the semantics of a concept, often relying on the semantics of its child in the AST.
 
+You will find in the `VisitorPattern` folder a template code to define the visitor interface, and the accept weaver to add the accept method to the node of the AST.
+
 ### Interpretation: 
 
 In this lab, your interpreter will run on a web-based simulator for the robot written in JavaScript.
 You will find in the interpreter folder of this repository, the code of the simulator provided for this part of the lab.
 In the `interpreter.ts`, implement the visitor
 
-(détails techniques de où écrire les fonctions/comment les lier au simulateur)
+You will find in the `Interpreter` folder the code of the simulator.
+The Typescript files in the `web/simulator` folder represent the elements of the simulation used in your interpreter.
+Especially, you will find the *Robot* class that will be manipulated by your interpreter
+The JavaScript files in the `static/simulator` folder are used to display the simulation on the web page.
+This JavaScript code expects to receive the final state of the scene simulated.
 
+To understand how to create the communication between the LSP server and client, we propose you to first create a 'parseAndValidate' LSP action.
+The general idea of the 'parseAndValidate' action can be found [here](https://langium.org/tutorials/customizing_cli/), while the code required to define new LSP action usable in the web is detailed [here](https://langium.org/tutorials/generation_in_the_web/)
+
+**N.B.** the `setup.js` file already contains parts of the required code
 
 ### Compilation:
 
 Since the objective of this lab is to be able to program a small four-wheeled robot using your language, you will need to be able to compile your code to something the robot can understand - in this case, the robot uses an Arduino card, which can be programmed using a [subset of C](https://www.arduino.cc/reference/en/). You will need to write a compiler that generates Arduino code based on the defined model.
 
+To test your compiler, you will need the [Arduino IDE](https://www.arduino.cc/en/software). At first, you will not need the robot and just verify that the generated code is valid (Verify action in Arduino IDE).
+When your generator generates valid Arduino programs, ask your teacher the robot to verify the correct (or not) behavior.
+
 In the same idea as an interpreter, a compiler can also be implemented using a visitor pattern - but instead of directly simulating the behavior, you will generate the Arduino code representing this behavior.
 
 As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli compile <source>` in your terminal and have it generate Arduino code corresponding to the source program given as argument.
 
-To test your compiler, you will need the [Arduino IDE](https://www.arduino.cc/en/software). At first, you will not need the robot and just verify that the generated code is valid (Verify action in Arduino IDE).
-When your generator generates valid Arduino programs, ask your teacher the robot to verify the correct (or not) behavior.
+To understand how to call the semantics from the command line, we propose you to first create a 'parseAndValidate' action.
+The description of the 'parseAndValidate' action can be found [here](https://langium.org/tutorials/customizing_cli/).
+After that you will be able to call your visitor in a 'generate' action.
+
+You will find in the `Compiler` folder an example of code to control the robot.
+The global structure of this program will not require many changes.
+If you want details on the possible actions, go look at the `demoAction` function used in the example, it uses most of the possible movements.
+
+**WARNING :** This robot requires non-classical libraries, you will have to add them in the `libraries``
+
+
