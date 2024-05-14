@@ -173,6 +173,9 @@ Each method implemented in a visitor represents the semantics of a concept, ofte
 You will find in the `VisitorPattern` folder a template code to define the visitor interface, and the accept weaver to add the accept method to the node of the AST.
 Further explanation are detailed in the comments of the provided files.
 
+> In addition to the template, a python generator is provided.
+This generator take as parameter a file containing the concepts names (1 per line), and the project name (`"projectName"` in `langium-config.json`)
+
 ### Interpretation: 
 
 In this lab, your interpreter will run on a web-based simulator for the robot written in JavaScript.
