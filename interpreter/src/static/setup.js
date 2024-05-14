@@ -8,7 +8,8 @@ MonacoEditorLanguageClientWrapper.addMonacoStyles('monaco-editor-styles');
 
 const client = new MonacoEditorLanguageClientWrapper();
 const editorConfig = client.getEditorConfig();
-editorConfig.setMainLanguageId('robo-ml');       // WARNING Dependent of your project
+editorConfig.setMainLanguageId('robo-ml');       
+// WARNING Dependent of your project
 
 editorConfig.setMonarchTokensProvider(monarchSyntax);
 
@@ -39,30 +40,43 @@ editorConfig.theme = 'vs-dark';
 editorConfig.useLanguageClient = true;
 editorConfig.useWebSocket = false;
 
-const typecheck = (async () => {
-    console.info('typechecking current code...');
+const workerURL = new URL('./robo-ml-server-worker.js', import.meta.url); // WARNING Dependent of your project
+console.log(workerURL.href);
 
-    // To implement (Bonus)
-    
-    if(errors.length > 0){
-        const modal = document.getElementById("errorModal");
-        modal.style.display = "block";
-    } else {
-        const modal = document.getElementById("validModal");
-        modal.style.display = "block";
+const lsWorker = new Worker(workerURL.href, {
+    type: 'classic',
+    name: 'RoboMl Language Server'
+});
+client.setWorker(lsWorker);
+
+// keep a reference to a promise for when the editor is finished starting, we'll use this to setup the canvas on load
+const startingPromise = client.startEditor(document.getElementById("monaco-editor-root"));
+
+
+
+// Modals for TypeChecking
+var errorModal = document.getElementById("errorModal");
+var validModal = document.getElementById("validModal");
+var closeError = document.querySelector("#errorModal .close");
+var closeValid = document.querySelector("#validModal .close");
+closeError.onclick = function() {
+    errorModal.style.display = "none";
+}
+closeValid.onclick = function() {
+    validModal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == validModal) {
+        validModal.style.display = "none";
     }
-});
+    if (event.target == errorModal) {
+        errorModal.style.display = "none";
+    }
+} 
 
-const parseAndValidate = (async () => {
-    console.info('validating current code...');
-    // To implement
-});
 
-const execute = (async () => {
-    console.info('running current code...');
-    // To implement
-});
 
+// Simulation utility function
 const setupSimulator = (scene) => {
     const wideSide = max(scene.size.x, scene.size.y);
     let factor = 1000 / wideSide;
@@ -98,37 +112,30 @@ const setupSimulator = (scene) => {
     );
 }
 
-window.execute = execute;
-window.typecheck = typecheck;
-
-var errorModal = document.getElementById("errorModal");
-var validModal = document.getElementById("validModal");
-var closeError = document.querySelector("#errorModal .close");
-var closeValid = document.querySelector("#validModal .close");
-closeError.onclick = function() {
-    errorModal.style.display = "none";
-}
-closeValid.onclick = function() {
-    validModal.style.display = "none";
-}
-window.onclick = function(event) {
-    if (event.target == validModal) {
-        validModal.style.display = "none";
-    }
-    if (event.target == errorModal) {
-        errorModal.style.display = "none";
-    }
-  } 
-
-const workerURL = new URL('./robo-ml-server-worker.js', import.meta.url); // WARNING Dependent of your project
-console.log(workerURL.href);
-
-const lsWorker = new Worker(workerURL.href, {
-    type: 'classic',
-    name: 'RoboMl Language Server'
+const parseAndValidate = (async () => {
+    console.info('validating current code...');
+    // TODO : implement
 });
-client.setWorker(lsWorker);
 
-// keep a reference to a promise for when the editor is finished starting, we'll use this to setup the canvas on load
-const startingPromise = client.startEditor(document.getElementById("monaco-editor-root"));
+const typecheck = (async () => {
+    console.info('typechecking current code...');
 
+    // BONUS : Implement new semantics for typechecking
+    
+    if(errors.length > 0){
+        const modal = document.getElementById("errorModal");
+        modal.style.display = "block";
+    } else {
+        const modal = document.getElementById("validModal");
+        modal.style.display = "block";
+    }
+});
+
+const execute = (async () => {
+    console.info('running current code...');
+    // TODO : implement
+});
+
+window.parseAndValidate = parseAndValidate;
+window.typecheck = typecheck;
+window.execute = execute;

@@ -1,6 +1,6 @@
 # Labs on Domain-Specific Languages (DSL)
 
-The lab sessions for this course will consist in realizing the following steps. After each major step, you will need to showcase your work to your lab teacher through a small demonstration, which will be used to grade you. You can only move onto the next step once the teacher has validated the current part.
+
 
 These lab sessions are to be realized in groups of two.
 
@@ -12,7 +12,7 @@ Below, you can find an example of a program that we expect to write in your lang
 
 ```
 let void entry () {
-    setSpeed(150 mm) // distance per second (here 150mm/s)
+    setSpeed(150 in mm) // distance per second (here 150mm/s)
     var number count = 0
     loop count < 5
     {	
@@ -22,20 +22,42 @@ let void entry () {
 }
 
 let void square(){
-    Forward 30 cm
+    Forward 30 in cm
     Clock 90
-    Forward 300 mm
+    Forward 300 in mm
     Clock 90
-    Forward 30 cm
+    Forward 30 in cm
     Clock 90
-    Forward 300 mm
+    Forward 300 in mm
     Clock 90
 }
 ```
 
 The above program, when executed, should set the speed of the robot and then perform 5 time (loop) a square pattern movement (square function).
 
-The robot used for this lab has four wheels with individual motors, and an ultrasound sensor which can be used to measure distance to an object in front. We expect your language to mostly follow the imperative programming paradigm, with basic arithmetics and commands for the robot.
+The robot used for this lab has four wheels with individual motors, and an ultrasound sensor which can be used to measure distance to an object in front. We expect your language to mostly follow the imperative programming paradigm, with basic arithmetic and commands for the robot.
+
+## Evaluation
+
+These labs are split in three parts corresponding to the three main aspects of DSLs implementation: abstract syntax, concrete syntax and semantics.
+
+The lab sessions for this course will consist in the realization of these aspects. After each major step, you will need to showcase your work to your lab teacher through a small demonstration, which will be used to grade you. You can only move onto the next step once the teacher has validated the current part.
+
+A final evaluation of your work will be done at the end, based on your code.
+This code should be pushed to a GitLab/GitHub repository, and the link sent to your lab teacher.
+
+To encourage you to finish completely at least one of the two possible semantics, yet exploring both compilation and interpretation, you will have to choose a major and a minor semantics.
+This choice should be clearly stated in the README file of the git repository.
+
+The evaluation grid is the following:
+- Abstract syntax : 5
+- Concrete Syntax : 5
+- Semantics : 10
+    * Major : 7
+    * Minor : 3
+
+The **deadline** for the project is the ___26/05/2024 at 23:59___.
+Commits after this date will be ignored.
 
 ## Part 1 - Domain modeling: definition of the language's metamodel with Ecore
 
@@ -56,6 +78,9 @@ There is a short list of mandatory concepts that we want:
 - Functions and variables
 
 **N.B. :** For units, you can either implement it as "cast function" or as a concrete type in the language.
+> For units, you can either implement it as "cast function" or as a concrete type in the language.  
+As a cast -> `var number length = 10 in cm`.  
+As a type -> `var cm length = 10`.
 
 ### Ecore modeling
 
@@ -71,7 +96,10 @@ You may assess the expressivity of your metamodel (*i.e.*, check if it captures 
 
 After determining the domain, it is time to move on to the actual text editor for your language. In this lab, we will be building this editor using the TypeScript-based [Langium](https://langium.org/) workbench to build a Visual Studio Code extension supporting edition of your language.
 
-If not done already, you will need to install a [node environment](https://nodejs.org/en/download) as well as [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview), and then run the command `npm i -g yo generator-langium` to install the Langium project generator. Then, run `yo langium` to create the project. This will offer to create a few different things; you **have to** say yes to all of them, pick a language name, extension name and a file extension (*e.g.* .rob).
+If not done already, you will need to install a [node environment](https://nodejs.org/en/download) as well as [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview), and then run the command `npm i -g yo@4.3.1 generator-langium@2.0.0` to install the Langium project generator. Then, run `yo langium` to create the project. This will offer to create a few different things; you **have to** say yes to all of them, pick a language name, extension name and a file extension (*e.g.* .rob).
+
+> We use particular version of yo and generator-langium in these labs due to the rapid change in version of langium.
+**Make sure that you use these versions**.
 
 Depending on what modeling tool you picked in part 1, the next step can change a little bit. If you picked another method than Ecore, skip the following section.
 
@@ -143,6 +171,7 @@ The visitor pattern allows to split the language definition in two parts, the sy
 Each method implemented in a visitor represents the semantics of a concept, often relying on the semantics of its child in the AST.
 
 You will find in the `VisitorPattern` folder a template code to define the visitor interface, and the accept weaver to add the accept method to the node of the AST.
+Further explanation are detailed in the comments of the provided files.
 
 ### Interpretation: 
 
@@ -152,12 +181,14 @@ In the `interpreter.ts`, implement the visitor
 
 You will find in the `Interpreter` folder the code of the simulator.
 The Typescript files in the `web/simulator` folder represent the elements of the simulation used in your interpreter.
-Especially, you will find the *Robot* class that will be manipulated by your interpreter
+Especially, you will find the *Robot* class that will be manipulated by your interpreter.
+In addition, you will find the scene classes representing the environment in which the robot evolves.  
+The scene **REQUIRES** you to add timestamps objects recording the steps of the simulation to replay it in the web page.  
 The JavaScript files in the `static/simulator` folder are used to display the simulation on the web page.
 This JavaScript code expects to receive the final state of the scene simulated.
 
 To understand how to create the communication between the LSP server and client, we propose you to first create a 'parseAndValidate' LSP action.
-The general idea of the 'parseAndValidate' action can be found [here](https://langium.org/tutorials/customizing_cli/), while the code required to define new LSP action usable in the web is detailed [here](https://langium.org/tutorials/generation_in_the_web/)
+The general idea of the 'parseAndValidate' action can be found [here](https://web.archive.org/web/20230323045804/https://langium.org/tutorials/customizing_cli/), while the code required to define new LSP action usable in the web is detailed [here](https://web.archive.org/web/20230323041439/https://langium.org/tutorials/generation_in_the_web/)
 
 **N.B.** the `setup.js` file already contains parts of the required code
 
@@ -170,16 +201,20 @@ When your generator generates valid Arduino programs, ask your teacher the robot
 
 In the same idea as an interpreter, a compiler can also be implemented using a visitor pattern - but instead of directly simulating the behavior, you will generate the Arduino code representing this behavior.
 
-As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli compile <source>` in your terminal and have it generate Arduino code corresponding to the source program given as argument.
+As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli.js compile <source>` in your terminal and have it generate Arduino code corresponding to the source program given as argument.
 
 To understand how to call the semantics from the command line, we propose you to first create a 'parseAndValidate' action.
-The description of the 'parseAndValidate' action can be found [here](https://langium.org/tutorials/customizing_cli/).
+The description of the 'parseAndValidate' action can be found [here](https://web.archive.org/web/20230323045804/https://langium.org/tutorials/customizing_cli/).
 After that you will be able to call your visitor in a 'generate' action.
 
 You will find in the `Compiler` folder an example of code to control the robot.
 The global structure of this program will not require many changes.
-If you want details on the possible actions, go look at the `demoAction` function used in the example, it uses most of the possible movements.
+If you want details on the possible actions, go look at the definition of the `demoAction` function used in the example, it uses most of the possible movements.
+> You can find it in the MotorWheel lib, in the `Omni4WD.cpp` file
 
-**WARNING :** This robot requires non-classical libraries, you will have to add them in the `libraries``
+**WARNING :** This robot requires non-classical libraries, you will have to add them.
+Copy the folders in the `compiler/Arduino Example/lib/` folder in the `libraries` folder of your Arduino IDE.
+
+
 
 
