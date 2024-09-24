@@ -113,7 +113,7 @@ The above linked Eclipse plugin will let you convert your Ecore model and Xtext 
 
 ### Other types of modeling
 
-Since you have previously modeled your domain, we need to translate that modeling effort into a metamodel that can be understood by Langium. This can be done by inserting TypeScript-like interfaces in the grammar, the full specification of which can be seen [here](https://langium.org/docs/sematic-model/#declared-types). As an example, this could be the model used for a Finished State Machine language:
+Since you have previously modeled your domain, we need to translate that modeling effort into a metamodel that can be understood by Langium. This can be done by inserting TypeScript-like interfaces in the grammar, the full specification of which can be seen [here](https://langium.org/docs/reference/semantic-model/#declared-types). As an example, this could be the model used for a Finished State Machine language:
 
 ```ts
 interface StateMachine {
