@@ -84,7 +84,7 @@ As a type -> `var cm length = 10`.
 
 ### Ecore modeling
 
-Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., [Eclipse DSL](https://www.eclipse.org/downloads/packages/release/2023-09/r/eclipse-ide-java-developers) with the added [Ecore tools](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
+Within your Eclipse RCP that includes EMF, Xtext and Xtend (e.g., [Eclipse DSL](https://www.eclipse.org/downloads/packages/release/2023-09/r/eclipse-ide-java-and-dsl-developers) with the added [Ecore tools](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
 
 You may validate your metamodel by right-clicking on your ecore model and then clicking on _Validate_.
 
@@ -107,9 +107,17 @@ Depending on what modeling tool you picked in part 1, the next step can change a
 
 ### Ecore modeling
 
-If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium: simply follow the instructions from the README of [this project](https://github.com/TypeFox/xtext2langium). You can thus write your grammar using Xtext rather than Langium if you so wish.
+If you decided to model your domain using Ecore and Eclipse in the previous part, you may be aware that it is possible to generate an Xtext project from an Ecore project (by creating a new _Xtext Project From Existing Ecore Models_). Fortunately, it is possible to convert an Xtext grammar into a Langium grammar thanks to [this project](https://github.com/TypeFox/xtext2langium). You can thus write your grammar using Xtext rather than Langium if you so wish.
 
-The above linked Eclipse plugin will let you convert your Ecore model and Xtext grammar to `.langium` files, which you can put into your `src/language/` folder of the Langium project. Make sure the grammars names match up between your projects, otherwise you will have to manually refactor the conflicts.
+To convert a grammar, go to the Eclipse menu _Help_ -> _Install new software_ -> in the site field, paste the url `https://typefox.github.io/xtext2langium/download/updates/v0.4.0/` and install the package. Afterwards, go into your Xtext project's `META-INF/MANIFEST.MF`, switch to the _Dependencies_ tab and add Xtext2langium as a dependency. Don't forget to save your manifest file. Then you can go to the MWE2 file (named something like `GenerateMyDsl.mwe2`) in your project, and replace the `fragment` field with:
+
+```
+fragment = io.typefox.xtext2langium.Xtext2LangiumFragment {
+        outputPath = './langium'
+    }
+```
+
+Right click the MWE2 file and run it. You should see a langium folder appear in your project, with corresponding `.langium` grammar files which you can put into your `src/language/` folder of the Langium project. Make sure the grammars names match up between your projects, otherwise you will have to manually refactor the conflicts.
 
 ### Other types of modeling
 
