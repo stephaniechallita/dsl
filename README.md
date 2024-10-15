@@ -212,7 +212,19 @@ When your generator generates valid Arduino programs, ask your teacher the robot
 
 In the same idea as an interpreter, a compiler can also be implemented using a visitor pattern - but instead of directly simulating the behavior, you will generate the Arduino code representing this behavior.
 
+
 As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli.js compile <source>` in your terminal and have it generate Arduino code corresponding to the source program given as argument.
+
+Before you add compiling commands, make sure your `bin/cli.js` file in the project has the following content:
+
+```js
+#!/usr/bin/env node
+
+import main from '../out/cli/main.js';
+main();
+```
+
+You will also need to change the line `.version(require('../../package.json').version);` to `.version("0.0.1");` in `src/cli/main.ts`.
 
 To understand how to call the semantics from the command line, we propose you to first create a 'parseAndValidate' action.
 The description of the 'parseAndValidate' action can be found [here](https://web.archive.org/web/20230323045804/https://langium.org/tutorials/customizing_cli/).
