@@ -39,7 +39,7 @@ The robot used for this lab has four wheels with individual motors, and an ultra
 
 These labs are split into three parts corresponding to the three main aspects of DSLs implementation: abstract syntax, concrete syntax, and semantics.
 
-The lab sessions for this course will consist in the realization of these aspects. After each major step, you will need to showcase your work to your lab teacher through a small demonstration, which will be used to grade you. You can only move on to the next step once the teacher has validated the current part.
+The lab sessions for this course will consist in the realization of these aspects. 
 
 To encourage you to finish completely at least one of the two possible semantics, yet exploring both compilation and interpretation, you will have to choose a major and a minor semantics.
 The major semantics will be used to evaluate your project.
@@ -48,6 +48,8 @@ The evaluation grid is the following:
 - Abstract syntax: 5
 - Concrete Syntax: 5
 - Semantics: 10
+
+By the end of the module, you must submit a Git repository containing all your source files, along with a comprehensive README that clearly describes the project’s structure, its functionality, and the engineering decisions you made, including the reasoning behind each choice.
 
 ## Part 1 - Domain modeling: definition of the language's metamodel with Ecore
 
