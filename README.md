@@ -1,7 +1,5 @@
 # Labs on Domain-Specific Languages (DSL)
 
-
-
 These lab sessions are to be realized in groups of two.
 
 ## Overall objectives of the lab
@@ -60,19 +58,51 @@ For this part, you can pick any tool you want: the Ecore framework, an online UM
 If you chose Ecore, there are some instructions below to help with the technical aspect.
 
 There is a short list of mandatory concepts that we want:
+- Basic arithmetic and boolean expressions
+- Control structure (loop, conditions)
+- Functions and variables
 - Movement (front, back, sides)
 - Rotation
 - Speed
 - Sensors (time, distance to obstacle in front of the robot)
 - Units (*e.g.*, cm, mm)
-- Basic arithmetic and boolean expressions
-- Control structure (loop, conditions)
-- Functions and variables
 
 **N.B.:** For units, you can either implement it as "cast function" or as a concrete type in the language.
 > For units, you can either implement it as "cast function" or as a concrete type in the language.  
 As a cast -> `var number length = 10 in cm`.  
 As a type -> `var cm length = 10`.
+
+Your metamodel needs to support generic programming constructs, so that the robot can be programmed with real logic.
+
+### 1. Arithmetic and Boolean Expressions
+
+Think of expressions as a hierarchy. An expression can be a constant, a variable reference, a function call, or an operation combining other expressions.
+
+Each operator (`+`, `-`, `*`, `/`, `<`, `<=`, `==`, `!=`, `&&`, `||`, `!`) can be modeled as a concept that has references to its left and right operands.
+
+Hint: You don’t need one class per operator if you don’t want — there are common modeling patterns for expression trees.
+
+Important: expressions should be composable, i.e. you can put them inside each other, and they should be usable anywhere a value is expected (conditions, loop guards, assignments, etc.).
+
+### 2. Control Structures
+
+You need a way to express loops and conditional branching. Both of these depend on an expression (the condition). They also both contain a block of statements (the body).
+
+Hint: think about reusing the same concept of Block (a sequence of statements) for function bodies, loop bodies, and the "if" and "else" parts.
+
+### 3. Functions and Variables
+
+Functions have: a name, parameters, a return type, and a body (a block of statements). Variables can be declared and assigned. They need a name, a type, and a value (an expression).
+
+Hint: functions and variables are both named symbols that can be referred to later in the program. Try to avoid duplicating concepts unnecessarily.
+
+### 4. Domain Specific Integration
+
+Remember that all these constructs should work together with the robotics domain concepts.
+
+Example: a loop condition might use a sensor (getDistance() < 10), and the loop body might call movement commands.
+
+Example: a variable can store the result of a sensor and later be used as a distance argument in a Forward command.
 
 ### Ecore modeling
 
@@ -82,7 +112,7 @@ You may validate your metamodel by right-clicking on your ecore model and then c
 
 When this is done, you can generate the Java-based implementation of your domain model by opening the associated `genmodel` file, right-clicking on the root element, and _Generate all_. This is not mandatory to continue the lab.
 
-You may assess the expressivity of your metamodel (*i.e.*, check if it captures your domain well, in your case meaning it supports the modeling of the proposed example) by opening the Ecore metamodel, right-click on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure. 
+You may assess the expressivity of your metamodel (*i.e.*, check if it captures your domain well, in your case meaning it supports the modeling of the proposed example) by opening the Ecore metamodel, right-click on the concept of the root element of your expected model, and choose _Create dynamic instance_. Then you can create a model in a tree-based editor, and ensure your metamodel supports the expected model structure.
 
 ## Part 2 - Textual modeling: definition of the Langium grammar and editor for your language
 
