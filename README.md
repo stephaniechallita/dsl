@@ -108,7 +108,7 @@ Example: a variable can store the result of a sensor and later be used as a dist
 
 ### Ecore modeling
 
-Within your Eclipse RCP that includes EMF, Xtext, and Xtend (e.g., [Eclipse DSL](https://www.eclipse.org/downloads/packages/release/2024-12/r/eclipse-ide-java-and-dsl-developers) with the added [Ecore tools](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
+Within your Eclipse RCP that includes EMF, Xtext, and Xtend (e.g., [Eclipse DSL 2025-09](https://www.eclipse.org/downloads/packages/release/2025-09/r/eclipse-ide-java-and-dsl-developers) with the added [Ecore tools 4.0](https://projects.eclipse.org/projects/modeling.emft.ecoretools) which you can install with _Help_ -> _Eclipse Marketplace..._ -> search for `ecoretools`), create an _Ecore Modeling Project_. Then you can start modeling your domain as an object-oriented metamodel, which should represent the different concepts of your language and how they are related.
 
 You may validate your metamodel by right-clicking on your ecore model and then clicking on _Validate_.
 
