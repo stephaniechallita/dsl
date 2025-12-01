@@ -146,6 +146,13 @@ fragment = io.typefox.xtext2langium.Xtext2LangiumFragment {
 
 Right-click the MWE2 file and run it. You should see a `langium` folder appear in your project, with corresponding `.langium` grammar files which you can put into your `src/language/` folder of the Langium project. Make sure the grammars names match up between your projects, otherwise you will have to manually refactor the conflicts.
 
+> [!IMPORTANT]
+> The generated xtext grammar will be pretty basic and a "textual" representation of the Ecore metamodel, i.e. a tree-like text.
+> This grammar won't allow to write programms as described in the first section
+> You must update it.
+> However, it will produce a base for your grammar, and the TypeScript-like interfaces, allowing you to strongy type you grammar, see the [official langium documentation](https://langium.org/docs/reference/semantic-model/).
+> In particular, the difference between `infers` and `returns` when writing a parser rule.
+
 ### Other types of modeling
 
 Since you have previously modeled your domain, we need to translate that modeling effort into a metamodel that can be understood by Langium. This can be done by inserting TypeScript-like interfaces in the grammar, the full specification of which can be seen [here](https://langium.org/docs/reference/semantic-model/#declared-types). As an example, this could be the model used for a Finished State Machine language:
