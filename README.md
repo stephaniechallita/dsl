@@ -146,6 +146,13 @@ fragment = io.typefox.xtext2langium.Xtext2LangiumFragment {
 
 Right-click the MWE2 file and run it. You should see a `langium` folder appear in your project, with corresponding `.langium` grammar files which you can put into your `src/language/` folder of the Langium project. Make sure the grammars names match up between your projects, otherwise you will have to manually refactor the conflicts.
 
+> [!IMPORTANT]
+> The generated XText grammar will be pretty basic and a "textual" representation of the Ecore metamodel, i.e., a tree-like text.
+> This grammar won't allow to write programs as described in the first section. 
+> You must update it.
+> However, it will produce a base for your grammar, and the TypeScript-like interfaces, allowing you to strongly type your grammar, see the [official langium documentation](https://langium.org/docs/reference/semantic-model/).
+> In particular, the difference between `infers` and `returns` when writing a parser rule.
+
 ### Other types of modeling
 
 Since you have previously modeled your domain, we need to translate that modeling effort into a metamodel that can be understood by Langium. This can be done by inserting TypeScript-like interfaces in the grammar, the full specification of which can be seen [here](https://langium.org/docs/reference/semantic-model/#declared-types). As an example, this could be the model used for a Finished State Machine language:
@@ -177,7 +184,7 @@ You can then write the textual grammar rules that will return your specified typ
 
 Once you have a valid [Langium grammar](https://langium.org/docs/grammar-language/), you can launch the commands `npm run langium:generate` and `npm run build` to build the project.
 
-You can test your editor as you make changes either by launching the command `code --extensionDevelopmentPath=$PWD`, or by starting a debug session in VSCode, both of which will open a VSCode instance with your extension loaded in. You can create examples and test files for your language in this instance. A goal for this part can be to have your language parse the examples given in this document, such as the following:
+You can test your editor as you make changes, either by launching the command `code --extensionDevelopmentPath=$PWD`, or by starting a debug session in VSCode, both of which will open a VSCode instance with your extension loaded in. You can create examples and test files for your language in this instance. A goal for this part can be to have your language parse the examples given in this document, such as the following:
 
 ```
 let void entry () {
@@ -203,15 +210,15 @@ Even by testing your language, you cannot ensure your AST is built as you want.
 To help language designers with this task, Langium provides two different tools.
 
 The first one is directly accessible from the Langium VSCode extension, by typing `>railroad` in the quick access (CTRL + SHIFT + P) and clicking on "Langium: Show Railroad Syntax Diagram". 
-This will open a new panel and display you your grammar in a graphical way. 
+This will open a new panel and display your grammar in a graphical way. 
 It allows you to verify your grammar at a higher level.
 
 ![railroad](./images/railroad.png)
 
 The second one is accessible from the Langium website, on the [`Playground` page](https://langium.org/playground/).
-Here you can paste your grammar (without forgetting to also past your types and terminals, and removing your imports) and a program conforms to the grammar.
+Here you can paste your grammar (without forgetting to also paste your types and terminals, and removing your imports) and a program conforms to the grammar.
 By clicking on the "Tree" icon, you can open a new panel displaying the abstract syntax tree of your program, in JSON.
-However be aware, the playground has sometimes some refresh issues so the program text editor may be not synchronized anymore with the grammar one.
+However be aware, the playground has sometimes some refresh issues, so the program text editor may not be synchronized anymore with the grammar one.
 
 ![playground](./images/playground.png)
 
