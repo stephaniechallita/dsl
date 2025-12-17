@@ -26,5 +26,3 @@ export class BaseScene{
         this.timestamps.push(new Entities.Timestamp(0, this.robot));
     }
 }
-
-// You can add new Scenes here

@@ -30,15 +30,18 @@ export class Robot implements Entities{
     }
 
     turn(angle:number) : void {
-        // To implement
+        const rad = angle * Math.PI / 180;
+        this.rad += rad;
     }
 
     move(dist:number) : void {
-        // To implement
+        const unit = new Vector(Math.cos(this.rad), Math.sin(this.rad));
+        this.pos = this.pos.plus(unit.scale(dist));
     }
 
     side(dist:number) : void {
-        // To implement
+        const unit = new Vector(- Math.sin(this.rad), Math.cos(this.rad));
+        this.pos = this.pos.plus(unit.scale(dist));
     }
 
     getRay(){

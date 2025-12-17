@@ -36,7 +36,7 @@ export class Robot {
 
         
     }
-  
+
     turn(angle: number){
         this.angle += angle;
         if(this.angle<0){

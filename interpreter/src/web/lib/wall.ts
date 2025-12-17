@@ -18,6 +18,6 @@ export class Wall {
 
     show() {
         this.p5.line(this.ax, this.ay, this.bx, this.by);
-      }
+    }
 
 }
