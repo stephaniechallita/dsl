@@ -264,6 +264,10 @@ However, the documentation for the web part is currently outdated for the latest
 Instead of it, you can add this code in the `src/setupClassic.ts` file:
 
 ```ts
+import { setup } from './web/setup.js'
+
+... 
+
 function getDocumentUri(wrapper: MonacoEditorLanguageClientWrapper): string {
     return wrapper.getModel()!.uri.toString();
 }
@@ -277,11 +281,16 @@ if (!client) {
 setup(client, getDocumentUri(wrapper)); // setup function of the setup.ts file
 ```
 
-You will find an example of communication between the client and the server from the client's perspective in the `setup.ts` file (lines 63 and 66).
+You will find an example of communication between the client and the server from the client's perspective in the `setup.ts` file (lines 23 and 27).
 
 On the server side, we need to modify the function `src/language/main-browser.ts` by adding this code at the end of the file:
 
 ```ts
+import { URI } from 'langium';
+import { <YourRootConceptFromVisitor> } from '../semantics/test-ml-visitor.js';
+
+...
+
 function getModelFromUri(uri: string): <YourRootConceptFromVisitor> | undefined {
     const document = shared.workspace.LangiumDocuments.getDocument(URI.parse(uri));
     if(document && document.diagnostics === undefined || document?.diagnostics?.filter((i) => i.severity === 1).length === 0) {
@@ -311,7 +320,7 @@ When your generator generates valid Arduino programs, ask your teacher the robot
 In the same idea as an interpreter, a compiler can also be implemented using a visitor pattern - but instead of directly simulating the behavior, you will generate the Arduino code representing this behavior.
 
 
-As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli.js compile <source>` (or `node ./bin/cli.js compile <source>`) in your terminal and have it generate Arduino code corresponding to the source program given as argument.
+As previously, you can put your visitor in the semantics folder. You can then use your compiler by adding a new command to the Command Line Interface provided by Langium, which will be the entry point from which you call the rest of your functions. Registering new commands can be done in `src/cli/main.ts`; once that is done, you should be able to call `./bin/cli.js generate <source>` (or `node ./bin/cli.js generate <source>`) in your terminal and have it generate Arduino code corresponding to the source program given as argument.
 
 To understand how to call the semantics from the command line, we propose you to first create a 'parseAndValidate' action.
 The description of the 'parseAndValidate' action can be found [here](https://langium.org/docs/learn/minilogo/customizing_cli/) ([archive](https://web.archive.org/web/20240916195444/https://langium.org/docs/learn/minilogo/customizing_cli/)).
