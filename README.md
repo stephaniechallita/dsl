@@ -315,6 +315,7 @@ Finally, you can execute `npm run serve` to run your server/client architecture,
 Since the objective of this lab is to be able to program a small four-wheeled robot using your language, you will need to be able to compile your code to something the robot can understand - in this case, the robot uses an Arduino card, which can be programmed using a [subset of C](https://www.arduino.cc/reference/en/). You will need to write a compiler that generates Arduino code based on the defined model.
 
 To test your compiler, you will need the [Arduino IDE](https://www.arduino.cc/en/software). At first, you will not need the robot and just verify that the generated code is valid (Verify action in Arduino IDE).
+The board we are using is a "Arduino Duemilanove", it must be configured in your Arduino IDE.
 When your generator generates valid Arduino programs, ask your teacher the robot to verify the correct (or not) behavior.
 
 In the same idea as an interpreter, a compiler can also be implemented using a visitor pattern - but instead of directly simulating the behavior, you will generate the Arduino code representing this behavior.
