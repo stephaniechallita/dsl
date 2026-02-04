@@ -246,8 +246,31 @@ In this lab, your interpreter will run on a web-based simulator for the robot wr
 You will find in the interpreter folder of this repository, the code of the simulator provided for this part of the lab.
 The Typescript files in the `src/web/simulator` folder represent the elements of the simulation used in your interpreter.
 Especially, you will find the *Robot* class that will be manipulated by your interpreter.
+The *Robot* class offers the following API
+```ts
+turn(angle: number): void // turn of angle degrees to the right.
+move(dist: number): void, // move forward of dist
+side(dist: number): void, // move on the left of dist
+getRay(): Ray, // create a new ray (radius) betweeen to robot and the in front of it, to evaluate distance 
+```
+
 In addition, you will find the scene classes representing the environment in which the robot evolves.  
-The scene **REQUIRES** you to add timestamp objects recording the steps of the simulation to replay it on the web page.  
+The scene **REQUIRES** you to add timestamp objects recording the steps of the simulation to replay it on the web page. 
+The *Robot* class of the simulator has a `scene` attribute, which has itself a `time` and a `timestamps` attributes.
+These attributes must be updated each the robot is moving, turning or modifying its speed.
+You need to calculate the time that elasped for a particular action and update both fields `time` and `timestamps`, as follow, in your interpreter:
+```ts
+constructor(public sharedRobot: Simulator.Robot){}
+...
+visitXXX(node: XXX) : boolean | number | void {
+    const dist = node.distance.accept(this) as number;
+    this.sharedRobot.move(dist);
+    const dt = dist / this.sharedRobot.speed;
+    this.sharedRobot.scene.time += dt *1000;
+    this.sharedRobot.scene.timestamps.push(new Simulator.Timestamp(this.sharedRobot.scene.time, this.sharedRobot));
+}
+```
+
 The TypeScript files in the `src/web/lib` folder are used to display the simulation on the web page and should only be used on the client side.
 This TypeScript code expects to receive the final state of the scene simulated.
 The `static` folder needs to be merged with the `static` folder of Langium and the `index.html` files must replace the existing one.
@@ -304,7 +327,29 @@ connection.onNotification("custom/hello", (uri: string) => connection.sendNotifi
 
 Here, we are listening a notification with the method `custom/hello`. When received, we are sending "World" to the client on the same method.
 The client will display `Hello World!` in the console.
-For your own code, you can replace the `"World"` by a call to your visitor.
+You need to modify this code to call your visitor when the notification `execute` is received.
+This must be done because in `setup.ts`, we attach to the browser window the following function:
+
+```ts
+const execute = (async () => {
+    console.info('running current code...');
+    client.sendNotification('execute', uri);
+    client.onNotification('execute', async (scene) => {
+        console.log(scene);
+        setupSimulator(scene);
+    });
+});
+...
+
+win.execute = execute;
+```
+
+This function is called when clicking on the "Execute Simulation" button in `index.html`:
+
+```html
+<input class="build" type="button" value="Execute Simulation" onclick="window.execute()">
+```
+
 The method `getModelFromUri`, enables, from a document URI, to get your root concept or `undefined` if the program is not valid.
 Even if it is not used in this example, you can use it for your own code.
 
